@@ -1,0 +1,8 @@
+.terraform
+.terraform.*
+terraform.tf 
+providers.tf
+terraform-ec2
+terraform-ec2.pub
+terraform.tfstate
+terraform.tfstate.*
