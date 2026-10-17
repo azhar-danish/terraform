@@ -64,8 +64,6 @@ resource "aws_instance" "my_instance" {
     for_each = tomap({
         react-app-master = "t2.small"
         react-app-worker = "t2.micro"
-        react-app-worker2 = "t2.medium" 
-        react-app-worker3 = "t2.large" 
     })
 
     depends_on = [ aws_security_group.ec2_SG, aws_key_pair.my_key ]
@@ -82,6 +80,7 @@ resource "aws_instance" "my_instance" {
 
     tags = {
         Name = each.key
+        Environment = var.env
     }
 }
 
