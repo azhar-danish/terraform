@@ -3,6 +3,9 @@
 resource "aws_key_pair" "my_key" {
     key_name = "react-app-key"
     public_key = file("terraform-ec2.pub")
+    tags = {
+        Environment = var.env
+    }
 }
 
 #default vpc
@@ -15,12 +18,13 @@ resource "aws_default_vpc" "default" {
 
 #security group
 resource "aws_security_group" "ec2_SG" {
-    name        = "ec2-SG"
+    name        = "ec2-SG-new"
     description = "Allow TLS inbound traffic and all outbound traffic"
     vpc_id      = aws_default_vpc.default.id #interpolation
 
     tags = {
-    Name = "ec2-SG"
+        Name = "ec2-SG"
+        Environment = var.env
     }
 
     #inbound rules
@@ -63,9 +67,6 @@ resource "aws_instance" "my_instance" {
     # count = 2
     for_each = tomap({
         react-app-master = "t2.small"
-        react-app-worker = "t2.micro"
-        react-app-worker2 = "t2.medium" 
-        react-app-worker3 = "t2.large" 
     })
 
     depends_on = [ aws_security_group.ec2_SG, aws_key_pair.my_key ]
@@ -82,6 +83,7 @@ resource "aws_instance" "my_instance" {
 
     tags = {
         Name = each.key
+        Environment = var.env
     }
 }
 
